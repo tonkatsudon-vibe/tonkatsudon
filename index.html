@@ -195,6 +195,21 @@ a:focus-visible,button:focus-visible,[tabindex]:focus-visible{outline:3px solid 
 @keyframes jump{40%{translate:0 -22px}}
 /* Snorlax napping on a card */
 .item.has-nap{margin-top:18px}
+/* "Essential" pick: golden card, pulsing ring, a pet asking to come along */
+.item.hl{margin-top:34px}
+.item.hl::before{content:"";position:absolute;inset:-7px;z-index:0;border:3px solid var(--mustard);border-radius:22px;pointer-events:none;animation:ring 2.2s ease-out infinite}
+@keyframes ring{0%{opacity:.95;transform:scale(.985)}100%{opacity:0;transform:scale(1.05)}}
+.item.hl .link{background:linear-gradient(135deg,#f8e19a 0%,#f0cd62 100%);border-width:3.5px;box-shadow:5px 5px 0 var(--ink)}
+.item.hl .link:hover{background:linear-gradient(135deg,#fae6a8 0%,#f3d372 100%);box-shadow:7px 7px 0 var(--ink)}
+.item.hl .link:active{box-shadow:1px 1px 0 var(--ink)}
+.item.hl .s{opacity:.85}
+.item.hl .ico.photo{width:62px;height:62px;transform:rotate(-4deg)}
+.hl-sticker{position:absolute;top:-15px;right:16px;z-index:3;transform:rotate(4deg);padding:5px 10px;color:var(--sand);background:var(--forest);
+  border:2.5px solid var(--ink);border-radius:8px;box-shadow:2px 2px 0 var(--ink);font:800 13px/1 var(--display);font-stretch:80%;letter-spacing:.07em;text-transform:uppercase;pointer-events:none}
+.hl-pet{position:absolute;left:22px;top:-40px;z-index:2;height:44px;width:auto;pointer-events:none;animation:idle 1.8s ease-in-out infinite}
+.hl-say{position:absolute;left:74px;top:-40px;z-index:2;padding:5px 9px;font:700 11px/1.1 var(--mono);white-space:nowrap;color:var(--ink);background:var(--paper);
+  border:2px solid var(--ink);border-radius:9px;box-shadow:2px 2px 0 var(--ink);pointer-events:none;animation:idle 1.8s ease-in-out infinite;animation-delay:-.4s}
+.hl-say::before{content:"";position:absolute;left:-7px;top:9px;border:6px solid transparent;border-right-color:var(--ink);border-left:0}
 .nap{position:absolute;right:26px;top:-44px;z-index:2;width:56px;height:56px;pointer-events:none}
 .zzz{position:absolute;right:16px;top:-50px;z-index:2;width:30px;height:30px;font:700 11px/1 var(--mono);color:var(--forest);pointer-events:none}
 .zzz b{position:absolute;left:0;bottom:0;opacity:0;animation:zzz 3s ease-in infinite}
@@ -478,20 +493,22 @@ const PAGE = {
 
   featured: {
     sticker:   "★ Maker pick",
-    kicker:    "SunFounder · for Raspberry Pi",
-    title:     "3.5\" IPS Touchscreen",
-    sub:       "480×320 · 50 FPS · plugs straight onto the GPIO pins — and runs RetroPie.",
+    kicker:    "SparkFun · Raspberry Pi",
+    title:     "Raspberry Pi 5 · 4GB",
+    sub:       "Quad-core 2.4GHz · dual 4K HDMI — the tiny computer behind DIY builds.",
     cta:       "Check it out",
-    img:       "sunfounder",
+    img:       "pi5",
     affiliate: true,
-    url:       "https://www.sunfounder.com/products/sunfounder-3-5-inch-480x320-touch-screen-ips-lcd-spi-display-monitor?srsltid=AU7gw4UKvnliaUx3IpYhKszjL18eBwbfq1DCpBhu_jh16-JNGutUj7bi&ref=tonkatsu-don",
+    url:       "https://www.sparkfun.com/raspberry-pi-5-4gb.html?affiliate_code=PF7GCpMMoV&referring_service=link",
   },
 
   sections: [
     {
       title: "Parts I build with",
       links: [
-        { title: "Raspberry Pi 5",              sub: "The 4GB board, from SparkFun",                      icon: "chip",   color: "rust",    img: "pi5", url: "https://www.sparkfun.com/raspberry-pi-5-4gb.html" },
+        { title: "SunFounder 3.5\" touchscreen", sub: "Take your Pokémon pet anywhere — snaps right onto your Pi", icon: "screen", color: "mustard", img: "sunfounder", affiliate: true,
+          highlight: { sticker: "★ Essential", pet: "charmander", say: "Take me with you!" }, url: "https://www.sunfounder.com/products/sunfounder-3-5-inch-480x320-touch-screen-ips-lcd-spi-display-monitor?srsltid=AU7gw4UKvnliaUx3IpYhKszjL18eBwbfq1DCpBhu_jh16-JNGutUj7bi&ref=tonkatsu-don" },
+        { title: "Raspberry Pi 5 · 8GB",        sub: "The 8GB board, from SparkFun",                      icon: "chip",   color: "rust",    img: "pi5", affiliate: true, url: "https://www.sparkfun.com/raspberry-pi-5-8gb.html?affiliate_code=PF7GCpMMoV&referring_service=link" },
       ],
     },
     {
@@ -656,7 +673,8 @@ $("#sections").innerHTML = PAGE.sections
       const tile = l.img
         ? `<span class="ico photo"><img src="${esc(imgSrc(l.img))}" alt="" loading="lazy"></span>`
         : `<span class="ico" style="--c:${c};--fg:${fg}">${svg(l.icon)}</span>`;
-      return `<div class="item rise${l.nap ? " has-nap" : ""}" style="--i:${n++}">
+      const hl = l.highlight;
+      return `<div class="item rise${l.nap ? " has-nap" : ""}${hl ? " hl" : ""}" style="--i:${n++}">
         <a class="link" ${linkAttrs(l.url, l.title, l.affiliate)}>
           ${tile}
           <span class="txt">
@@ -665,6 +683,7 @@ $("#sections").innerHTML = PAGE.sections
           </span>
           ${svg("arrow", "go")}
         </a>
+        ${hl ? `${hl.sticker ? `<span class="hl-sticker">${esc(hl.sticker)}</span>` : ""}${hl.pet ? `<img class="hl-pet px-art" src="${imgSrc(hl.pet)}" alt="">` : ""}${hl.say ? `<span class="hl-say" aria-hidden="true">${esc(hl.say)}</span>` : ""}` : ""}
         ${l.nap ? `<img class="nap px-art" src="${imgSrc(l.nap)}" alt=""><span class="zzz" aria-hidden="true"><b>z</b><b>z</b><b>Z</b></span>` : ""}
         ${l.code ? `<div class="coupon">
           <span class="c-txt"><small>Promo code${l.codeNote ? " · " + esc(l.codeNote) : ""}</small><b class="code">${esc(l.code)}</b></span>
