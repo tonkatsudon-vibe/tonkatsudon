@@ -301,6 +301,7 @@ a:focus-visible,button:focus-visible,[tabindex]:focus-visible{outline:3px solid 
   padding:3px 6px 2px;font:500 10px/1 var(--body);font-style:normal;letter-spacing:.08em;text-transform:uppercase;
   background:var(--paper);border:1.5px solid var(--ink);border-radius:5px;
 }
+.aff.tag{background:var(--mustard)}
 .go{flex:none;width:22px;height:22px;opacity:.75;transition:transform .14s ease}
 .link:hover .go{transform:translateX(3px);opacity:1}
 
@@ -504,11 +505,11 @@ const PAGE = {
 
   sections: [
     {
-      title: "Parts I build with",
+      title: "Other build options",
       links: [
         { title: "SunFounder 3.5\" touchscreen", sub: "Take your Pokémon pet anywhere — snaps right onto your Pi", icon: "screen", color: "mustard", img: "sunfounder", affiliate: true,
           highlight: { sticker: "★ Essential", pet: "charmander", say: "Take me with you!" }, url: "https://www.sunfounder.com/products/sunfounder-3-5-inch-480x320-touch-screen-ips-lcd-spi-display-monitor?srsltid=AU7gw4UKvnliaUx3IpYhKszjL18eBwbfq1DCpBhu_jh16-JNGutUj7bi&ref=tonkatsu-don" },
-        { title: "Raspberry Pi 5 · 8GB",        sub: "The 8GB board, from SparkFun",                      icon: "chip",   color: "rust",    img: "pi5", affiliate: true, url: "https://www.sparkfun.com/raspberry-pi-5-8gb.html?affiliate_code=PF7GCpMMoV&referring_service=link" },
+        { title: "Raspberry Pi 5 · 8GB",        tag: "⬆ Upgrade from 4GB", sub: "Twice the memory for bigger builds — 3D scenes, emulators and more apps at once. Same quad-core 2.4GHz and dual 4K HDMI, from SparkFun.",                      icon: "chip",   color: "rust",    img: "pi5", affiliate: true, url: "https://www.sparkfun.com/raspberry-pi-5-8gb.html?affiliate_code=PF7GCpMMoV&referring_service=link" },
       ],
     },
     {
@@ -678,7 +679,7 @@ $("#sections").innerHTML = PAGE.sections
         <a class="link" ${linkAttrs(l.url, l.title, l.affiliate)}>
           ${tile}
           <span class="txt">
-            <span class="t">${esc(l.title)}${l.affiliate ? AFF : ""}</span>
+            <span class="t">${esc(l.title)}${l.tag ? `<i class="aff tag">${esc(l.tag)}</i>` : ""}${l.affiliate ? AFF : ""}</span>
             ${l.sub ? `<span class="s">${esc(l.sub)}</span>` : ""}
           </span>
           ${svg("arrow", "go")}
